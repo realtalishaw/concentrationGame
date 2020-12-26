@@ -90,9 +90,10 @@
         <!-- HTML here-->
         <div class="container">
             <div id="game">
+                <button id="reset-button">reset</button>
                 <!-- Game Squares-->
             
-                <div class="game-square"> <!-- Window that masks what's inside-->
+                <div class="game-square" class="square-0"> <!-- Window that masks what's inside-->
                     <div> <!-- Drawer-->
                         <div><!-- Default --></div>
                         <div><!-- Color --> </div>
@@ -208,6 +209,63 @@
         </div>
     <script>
         // JS Code here
+        var resetButton = document.getElementById("reset-button");
+        var colors = [];
+        for (var 1 = 0; i < 10; i++) {
+            colors.push("square-" +i);
+        }
+        //Game Objects
+        function GameSquare(el, color) {
+            this.el = el;
+            this.isOpen = false;
+            this.isLocked = false;
+            this.el.addEventListener("click", this, false);
+            this.setColor(color); // <-- set the color!
+        }
+
+        // Adding Methods to GameSquare
+        GameSquare.prototype.handleEvent = function(e) {
+            switch (e.type) {
+                case "click":
+                    if (this.isOpen || this.isLocked) {
+                        return;
+                    }
+                    this.isOpen = true;
+                    this.el.classList.add('flip');
+            }
+        }
+
+        // reset button
+        GameSquare.prototype.reset = function() {
+            this.isOpen = false;
+            this.isLocked = false;
+            this.el.classList.remove('flip');
+        }
+
+        // lock
+        GameSquare.prototype.lock = function() {
+            this.isLocked = true;
+            this.isOpen = true;
+        }
+
+        // setColor
+        GameSquare.prototype.setColor = function() {
+            this.el.children[0].classList.remove(this.color);
+            this.color = color;
+            this.el.children[0].children[1].classList.add(color);
+        }
+
+        var gameSquares = [];
+
+        // function to setup the game
+        function setupGame() {
+            var array = document.getElementsByClassName("game-square");
+            for (var i = 0; i < array.length; i++) {
+                gameSquares.push(new GameSquare(array[i], colors[0]));
+            }
+        }
+
+        setupGame();
     </script>
     </body>
 </html>
