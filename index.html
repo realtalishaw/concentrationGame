@@ -1,100 +1,108 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Concentration Game</title>
-        <style>
-            /* CSS here */
-            /* window */
-            .game-square {
-                box-sizing: border-box;
-                border: 1px solid #000;
-                width: 100px;
-                height: 100px;
-                position: relative;
-                overflow: hidden;
-            }
-            .game-square > div { /* Drawer */
-                width:  100%;
-                height: 200%;
-                position: absolute;
-                top: 0;
-                transition: 400ms;
-            }
 
-            .game-square > div > div { /* Default & color */
-                height: 50%;
-            }
+<head>
+	<title>Concentration Game</title>
+	<style>
+		/* CSS here */
+		/* window */
+		.game-square {
+			box-sizing: border-box;
+			border: 1px solid #000;
+			width: 100px;
+			height: 100px;
+			position: relative;
+			overflow: hidden;
+		}
 
-            .game-square > div > div:first-child { /* Default Square hets a style */
-                background-color: gray;
-            }
+		.game-square>div {
+			/* Drawer */
+			width: 100%;
+			height: 200%;
+			position: absolute;
+			top: 0;
+			transition: 400ms;
+		}
 
-            .flip > div { /* get the square to sliide up and reveal the color to match */
-                top: -100%;
-            }
+		.game-square>div>div {
+			/* Default & color */
+			height: 50%;
+		}
 
-            /* Styles represent the colors of the matching squares */
+		.game-square>div>div:first-child {
+			/* Default Square hets a style */
+			background-color: gray;
+		}
 
-            .square-0 {
-                background-color: aqua;
-            }
+		.flip>div {
+			/* get the square to sliide up and reveal the color to match */
+			top: -100%;
+		}
 
-            .square-1 {
-                background-color: bisque;
-            }
+		/* Styles represent the colors of the matching squares */
 
-            .square-2 {
-                background-color: blue;
-            }
+		.square-0 {
+			background-color: aqua;
+		}
 
-            .square-3 {
-                background-color: blueviolet;
-            }
+		.square-1 {
+			background-color: bisque;
+		}
 
-            .square-4 {
-                background-color: brown;
-            }
+		.square-2 {
+			background-color: blue;
+		}
 
-            .square-5 {
-                background-color: cadetblue;
-            }
+		.square-3 {
+			background-color: blueviolet;
+		}
 
-            .square-6 {
-                background-color: chartreuse;
-            }
+		.square-4 {
+			background-color: brown;
+		}
 
-            .square-7 {
-                background-color: chocolate;
-            }
+		.square-5 {
+			background-color: cadetblue;
+		}
 
-            .square-8 {
-                background-color: coral;
-            }
+		.square-6 {
+			background-color: chartreuse;
+		}
 
-            .square-9 {
-                background-color: cornflowerblue;
-            }
+		.square-7 {
+			background-color: chocolate;
+		}
 
-            /* Arrange squares in a grid */
+		.square-8 {
+			background-color: coral;
+		}
 
-            #game {
-                width: 400px;
-                height: 400px;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                border: 1px solid red;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- HTML here-->
-        <div class="container">
+		.square-9 {
+			background-color: cornflowerblue;
+		}
+
+		/* Arrange squares in a grid */
+
+		#game {
+			width: 400px;
+			height: 400px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			border: 1px solid red;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- HTML here-->
+	<div class="container">
+		<button id="reset-button">reset</button>
             <div id="game">
-                <button id="reset-button">reset</button>
+              
                 <!-- Game Squares-->
             
-                <div class="game-square"> <!-- Window that masks what's inside-->
+                <div class="game-square" class="square-#"> <!-- Window that masks what's inside-->
                     <div> <!-- Drawer-->
                         <div><!-- Default --></div>
                         <div><!-- Color --> </div>
@@ -210,11 +218,16 @@
         </div>
     <script>
         // JS Code here
-        setupGame();
         var resetButton = document.getElementById("reset-button");
-        var colors = [];
-        for (var 1 = 0; i < 10; i++) {
-            colors.push("square-" +i);
+        var color = [];
+        for (var i = 0; i < 10; i++) {
+            color.push("square-" +i);
+        }
+          // setColor
+        GameSquare.prototype.setColor = function() {
+            this.el.children[0].classList.remove(this.color);
+            this.color = color;
+            this.el.children[0].children[1].classList.add(color);
         }
         //Game Objects
         function GameSquare(el, color) {
@@ -250,22 +263,34 @@
             this.isOpen = true;
         }
 
-        // setColor
-        GameSquare.prototype.setColor = function() {
-            this.el.children[0].classList.remove(this.color);
-            this.color = color;
-            this.el.children[0].children[1].classList.add(color);
-        }
 
         var gameSquares = [];
 
         // function to setup the game
         function setupGame() {
             var array = document.getElementsByClassName("game-square");
+            var randomColor = getSomeColors(); // get and array of 8 random color pairs
             for (var i = 0; i < array.length; i++) {
-                gameSquares.push(new GameSquare(array[i], colors[0]));
+              var index = random(randomColor.length); // get a random index
+              var color = randomColor.splice(index, 1)[0]; //get a color at that indec
+                gameSquares.push(new GameSquare(array[i], color)); // use that color to initialize the GameSquare
             }
         }
+       
+       setupGame();
+      // assign random colors
+      function random(n) {
+        return Math.floor(Math.random() * n);
+      }
+
+      function getSomeColors() {
+        var colorcopy = color.slice();
+        var randomColor = [];
+        for (var i = 0; i < 8; i++){
+          var index = random(colorcopy.splice(index, 1)[0]);
+        }
+        return randomColor.concat(randomColor.slice());
+      }
 
        
     </script>
